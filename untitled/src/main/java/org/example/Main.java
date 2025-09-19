@@ -49,5 +49,7 @@ public class Main {
                     + (kolcsonzesei[5].length() == 1 ? "0" + kolcsonzesei[5] : kolcsonzesei[5]) +
                     " : " + kolcsonzesei[0]);
         }
+
+        
     }
 }

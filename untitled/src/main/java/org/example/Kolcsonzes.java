@@ -57,14 +57,37 @@ public class Kolcsonzes {
         String[] idopontReszek = idopont.split(":");
         for(String[] kolcsonzes : kolcsonzesek){
             //Név;JAzon;EÓra;EPerc;VÓra;Vperc
-            if((Integer.parseInt(kolcsonzes[2]) < Integer.parseInt(idopontReszek[0])  //Eóra kisebb mint a megadott óra
-                    && Integer.parseInt(kolcsonzes[3]) < Integer.parseInt(idopontReszek[1])) //Eperc kisebb mint a megadott perc
-            &&
-            (Integer.parseInt(kolcsonzes[4]) > Integer.parseInt(idopontReszek[0] ) //Vóra nagyobb mint a megadott óra
-                    && Integer.parseInt(kolcsonzes[5]) > Integer.parseInt(idopontReszek[1]) //Vperc nagyobb mint a megadott perc
-            ))
-                vizenLevok.add(kolcsonzes);{
+
+            if(Integer.parseInt(kolcsonzes[2])  == Integer.parseInt(idopontReszek[0])){ //abba az órában kezdte
+                if(Integer.parseInt(kolcsonzes[3]) <= Integer.parseInt(idopontReszek[1])){ //Eperc kisebb mint a megadott perc
+                    //elvitte már
+                    if(Integer.parseInt(kolcsonzes[4]) > Integer.parseInt(idopontReszek[0])){ //Vóra nagyobb mint a megadott óra
+                        vizenLevok.add(kolcsonzes);
+                        //még nem érkezett vissza
+                    }
+                    else if(Integer.parseInt(kolcsonzes[4]) == Integer.parseInt(idopontReszek[0])){ //abba az órába érkezett vissza
+                        if(Integer.parseInt(kolcsonzes[5]) > Integer.parseInt(idopontReszek[1])){ //Vperc nagyobb mint a megadott perc
+                            vizenLevok.add(kolcsonzes);
+                            //még nem érkezett vissza
+                        }
+                    }
+                }
             }
+            else if(Integer.parseInt(kolcsonzes[2]) < Integer.parseInt(idopontReszek[0])){
+                //elvitte már
+                if(Integer.parseInt(kolcsonzes[4]) > Integer.parseInt(idopontReszek[0])){
+                    vizenLevok.add(kolcsonzes);
+                    //még nem érkezett vissza
+                }
+                else if(Integer.parseInt(kolcsonzes[4]) == Integer.parseInt(idopontReszek[0])){
+                    if(Integer.parseInt(kolcsonzes[5]) > Integer.parseInt(idopontReszek[1])){
+                        vizenLevok.add(kolcsonzes);
+                        //még nem érkezett vissza
+                    }
+                }
+
+            }
+
         }
 
         return vizenLevok;
