@@ -1,6 +1,7 @@
 package org.example;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Main {
@@ -50,6 +51,20 @@ public class Main {
                     " : " + kolcsonzesei[0]);
         }
 
-        
+        //8. feladat
+
+        System.out.println("8. feladat: A napi bevétel: " + kolcsonzes.napiBevetel() + " Ft");
+
+        //9. feladat
+
+        kolcsonzes.fajlbaIr("F.txt");
+
+        //10. feladat
+
+        System.out.println("10. feladat: Statisztika");
+
+        for(HashMap statisztika : kolcsonzes.statisztika()){
+            System.out.println(statisztika);
+        }
     }
 }

@@ -2,7 +2,9 @@ package org.example;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Kolcsonzes {
@@ -55,41 +57,69 @@ public class Kolcsonzes {
     public ArrayList<String[]> adottIdopont(String idopont){
         ArrayList<String[]> vizenLevok = new ArrayList<>();
         String[] idopontReszek = idopont.split(":");
+        int keresettIdopont = Integer.parseInt(idopontReszek[0]) * 60 + Integer.parseInt(idopontReszek[1]);
+
         for(String[] kolcsonzes : kolcsonzesek){
             //Név;JAzon;EÓra;EPerc;VÓra;Vperc
 
-            if(Integer.parseInt(kolcsonzes[2])  == Integer.parseInt(idopontReszek[0])){ //abba az órában kezdte
-                if(Integer.parseInt(kolcsonzes[3]) <= Integer.parseInt(idopontReszek[1])){ //Eperc kisebb mint a megadott perc
-                    //elvitte már
-                    if(Integer.parseInt(kolcsonzes[4]) > Integer.parseInt(idopontReszek[0])){ //Vóra nagyobb mint a megadott óra
-                        vizenLevok.add(kolcsonzes);
-                        //még nem érkezett vissza
-                    }
-                    else if(Integer.parseInt(kolcsonzes[4]) == Integer.parseInt(idopontReszek[0])){ //abba az órába érkezett vissza
-                        if(Integer.parseInt(kolcsonzes[5]) > Integer.parseInt(idopontReszek[1])){ //Vperc nagyobb mint a megadott perc
-                            vizenLevok.add(kolcsonzes);
-                            //még nem érkezett vissza
-                        }
-                    }
-                }
-            }
-            else if(Integer.parseInt(kolcsonzes[2]) < Integer.parseInt(idopontReszek[0])){
-                //elvitte már
-                if(Integer.parseInt(kolcsonzes[4]) > Integer.parseInt(idopontReszek[0])){
-                    vizenLevok.add(kolcsonzes);
-                    //még nem érkezett vissza
-                }
-                else if(Integer.parseInt(kolcsonzes[4]) == Integer.parseInt(idopontReszek[0])){
-                    if(Integer.parseInt(kolcsonzes[5]) > Integer.parseInt(idopontReszek[1])){
-                        vizenLevok.add(kolcsonzes);
-                        //még nem érkezett vissza
-                    }
-                }
+            int elvitte = Integer.parseInt(kolcsonzes[2]) * 60 + Integer.parseInt(kolcsonzes[3]);
+            int visszahozta = Integer.parseInt(kolcsonzes[4]) * 60 + Integer.parseInt(kolcsonzes[5]);
 
+            if(keresettIdopont >= elvitte && keresettIdopont < visszahozta){
+                vizenLevok.add(kolcsonzes);
             }
 
         }
 
         return vizenLevok;
+    }
+
+    public int napiBevetel(){
+        int bevetel = 0;
+        for(String[] kolcsonzes : kolcsonzesek){
+            int idoTartam =
+                    (Integer.parseInt(kolcsonzes[4]) * 60 + Integer.parseInt(kolcsonzes[5])) - //visszahozott idő percekben
+                            (Integer.parseInt(kolcsonzes[2]) * 60 + Integer.parseInt(kolcsonzes[3])); //elvitte idő percekben
+
+            bevetel += idoTartam / 30 + (idoTartam % 30 == 0 ? 0 : 1); //minden megkezdett fél óra 2400 ft
+        }
+
+        return bevetel * 2400;
+    }
+
+    public void fajlbaIr(String path){
+        try{
+            FileWriter writer = new FileWriter(path);
+
+            for(String[] kolcsonzes : kolcsonzesek){
+                if (kolcsonzes[1].equals("F")) {
+                    writer.write(kolcsonzes[2] + ":" + kolcsonzes[3] + "-" +
+                            kolcsonzes[4] + ":" + kolcsonzes[5] + " : " +
+                            kolcsonzes[0] + "\n");
+                }
+
+
+            }
+
+            writer.close();
+        }
+        catch (Exception e){
+            System.out.println("Hiba a fájl írásakor: " + e.getMessage());
+        }
+    }
+
+    public HashMap<String, Integer> statisztika(){
+        HashMap<String, Integer> statisztika = new HashMap<>();
+
+        for(String[] kolcsonzes : kolcsonzesek){
+            if(statisztika.containsKey(kolcsonzes[1])){
+                statisztika.put(kolcsonzes[1], statisztika.get(kolcsonzes[1]) + 1);
+            }
+            else{
+                statisztika.put(kolcsonzes[1], 1);
+            }
+        }
+
+        return statisztika;
     }
 }
