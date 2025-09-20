@@ -40,7 +40,7 @@ public class Main {
 
         ArrayList<Kolcsonzes> nevKolcsonzesei = valakiKolcsonzesei(kolcsonzesek, nev);
 
-        System.out.println(nevKolcsonzesei.isEmpty() ? nev.substring(0, 1).toUpperCase() + nev.substring(1) + "kölcsönzései: \n Nem volt neki kölcsönzései még." : nev.substring(0, 1).toUpperCase() + nev.substring(1) + " kölcsönzései:");
+        System.out.println(nevKolcsonzesei.isEmpty() ? nev.substring(0, 1).toUpperCase() + nev.substring(1) + " kölcsönzései: \nNem volt ilyen nevű kölcsönző." : nev.substring(0, 1).toUpperCase() + nev.substring(1) + " kölcsönzései:");
 
         for(Kolcsonzes kolcsonzes : nevKolcsonzesei){
             System.out.println(
